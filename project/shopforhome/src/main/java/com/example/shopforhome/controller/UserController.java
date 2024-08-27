@@ -32,6 +32,11 @@ public class UserController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @GetMapping("/hello")
+    public String helloString(){
+        return "hello";
+    }
+
     // post login
     @PostMapping("/login")
     public ResponseEntity<HashMap<String, Object>> login(@RequestBody LoginRequestDTO loginRequestDTO) {
@@ -56,31 +61,33 @@ public class UserController {
 
             Optional<User> user = userService.findByUsername(loginRequestDTO.getUsername());
             String role = user.get().getRole();
+            String userName = user.get().getUsername();
             HashMap<String, Object> returnMap = new HashMap<>();
-            returnMap.put("Login", "Success");
             returnMap.put("jwt", jwtUtil.generateToken(loginRequestDTO.getUsername(), role));
+            returnMap.put("userName", userName);
+            returnMap.put("role", role);
             return ResponseEntity.ok(returnMap);
         } catch (AuthenticationException e) {
             throw new RuntimeException("Invalid credentials");
         }
     }
 
-    // post register
     @PostMapping("/register")
-    public Map<String, String> register(@RequestBody RegisterUserDTO registerUserDTO) {
-
+    public ResponseEntity<Map<String, String>> register(@RequestBody RegisterUserDTO registerUserDTO) {
+    
         Map<String, String> hashMap = new HashMap<>();
-
+    
         User user = new User();
         user.setUsername(registerUserDTO.getUsername());
         user.setPassword(passwordEncoder.encode(registerUserDTO.getPassword()));
         user.setRole(registerUserDTO.getRole());
         userService.save(user);
-
-        hashMap.put("statue","successful register");
-        hashMap.put("userName",user.getUsername());
+    
+        hashMap.put("status", "successful register");
+        hashMap.put("userName", user.getUsername());
         hashMap.put("role", user.getRole());
-        return hashMap;
+    
+        return ResponseEntity.ok(hashMap);
     }
 
     @GetMapping("/roles")
