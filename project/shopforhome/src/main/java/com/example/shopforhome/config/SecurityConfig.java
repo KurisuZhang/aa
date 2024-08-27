@@ -53,7 +53,7 @@ public class SecurityConfig {
                 .cors(withDefaults())
                 .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin))
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/api/user/**").permitAll()
+                        .requestMatchers("/api/user/**", "/api/product/all").permitAll()
                         .requestMatchers("/swagger-ui/**","/v3/**").permitAll()
                         .requestMatchers(PathRequest.toH2Console()).permitAll()
                         .anyRequest().authenticated()

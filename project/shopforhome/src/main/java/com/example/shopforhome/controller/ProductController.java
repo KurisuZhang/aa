@@ -3,7 +3,11 @@ package com.example.shopforhome.controller;
 import com.example.shopforhome.dto.ProductPutByIdDTO;
 import com.example.shopforhome.entity.Product;
 import com.example.shopforhome.service.ProductService;
+
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
@@ -15,6 +19,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/product")
+@SecurityRequirement(name = "bearerAuth")
 public class ProductController {
 
     @Autowired
@@ -56,6 +61,7 @@ public class ProductController {
     }
 
     @PostMapping("/add")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public Map<String, String> addProduct(@RequestBody ProductPutByIdDTO ProductPutByIdDTO) {
         Product savedProduct = productService.addProduct(ProductPutByIdDTO);
         Map<String, String> response = new HashMap<>();
@@ -77,6 +83,7 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public Map<String, String> updateProduct(@PathVariable Long id, @RequestBody ProductPutByIdDTO productPutByIdDTO) {
         Map<String, String> response = new HashMap<>();
         Optional<Product> updatedProduct = productService.updateProduct(id, productPutByIdDTO);
@@ -103,6 +110,7 @@ public class ProductController {
 
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public Map<String, String> deleteProduct(@PathVariable Long id) {
         Map<String, String> response = new HashMap<>();
 

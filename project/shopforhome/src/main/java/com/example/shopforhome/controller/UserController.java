@@ -32,10 +32,6 @@ public class UserController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @GetMapping("/hello")
-    public String helloString(){
-        return "hello";
-    }
 
     // post login
     @PostMapping("/login")

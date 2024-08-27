@@ -3,8 +3,12 @@ package com.example.shopforhome.controller;
 import com.example.shopforhome.dto.CartItemDTO;
 import com.example.shopforhome.entity.Cart;
 import com.example.shopforhome.service.CartService;
+
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -12,6 +16,8 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/cart")
+@PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
+@SecurityRequirement(name = "bearerAuth")
 public class CartController {
 
     @Autowired
